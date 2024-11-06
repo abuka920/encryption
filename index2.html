@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fun Text Encryptor & Decryptor</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      background-color: #f0f4ff;
+    }
+
+    .container {
+      background: #fff;
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.1);
+      width: 400px;
+      text-align: center;
+      transition: all 0.3s;
+    }
+
+    .container:hover {
+      transform: scale(1.02);
+      box-shadow: 0px 5px 25px rgba(0, 0, 0, 0.15);
+    }
+
+    h2 {
+      color: #4a90e2;
+      margin-bottom: 15px;
+      animation: colorChange 2s infinite alternate;
+    }
+
+    @keyframes colorChange {
+      from { color: #4a90e2; }
+      to { color: #ff4a90; }
+    }
+
+    .section {
+      margin-top: 20px;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 12px;
+      margin-top: 10px;
+      border: 2px solid #4a90e2;
+      border-radius: 10px;
+      transition: border 0.3s;
+    }
+
+    input:focus, textarea:focus {
+      outline: none;
+      border-color: #ff4a90;
+    }
+
+    button {
+      background-color: #4a90e2;
+      color: white;
+      padding: 12px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      width: 100%;
+      margin-top: 10px;
+      font-size: 16px;
+      font-weight: bold;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #ff4a90;
+    }
+
+    button:active {
+      transform: scale(0.95);
+    }
+
+    .output-area {
+      margin-top: 15px;
+      padding: 15px;
+      border-radius: 10px;
+      background-color: #eaf7ff;
+      font-size: 16px;
+      color: #333;
+    }
+
+    .emoji-feedback {
+      font-size: 40px;
+      margin-top: 10px;
+      animation: bounce 0.5s ease infinite alternate;
+    }
+
+    @keyframes bounce {
+      from { transform: translateY(0); }
+      to { transform: translateY(-5px); }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h2>🔒 Fun Text Encryptor & Decryptor 🔓</h2>
+
+  <!-- Encryption Section -->
+  <div class="section">
+    <textarea id="encryptInput" placeholder="Enter your message to encrypt..."></textarea>
+    <button onclick="encryptMessage()">Encrypt Message</button>
+  </div>
+
+  <!-- Decryption Section for New Messages -->
+  <div class="section">
+    <textarea id="decryptInput" placeholder="Enter your message to decrypt..."></textarea>
+    <button onclick="decryptMessage()">Decrypt Message</button>
+  </div>
+  
+  <!-- Output Section -->
+  <div class="output-area" id="output">Your output will appear here.</div>
+  <div class="emoji-feedback" id="emojiFeedback">🔐</div>
+</div>
+
+<script>
+  // Define the character set for encryption and decryption
+  const chars = " " + "`~!@#$%^&*()-_=+[]{}|;:'\",.<>?/\\0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  let key = chars.split('');
+  shuffleArray(key);
+
+  // Shuffle function to create a random encryption key
+  function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+  }
+
+  // Encryption function
+  function encryptMessage() {
+    const message = document.getElementById('encryptInput').value;
+    let encryptedMessage = "";
+    for (let char of message) {
+      let index = chars.indexOf(char);
+      encryptedMessage += index !== -1 ? key[index] : char;
+    }
+    document.getElementById('output').innerText = "🔒 Encrypted: " + encryptedMessage;
+    document.getElementById('emojiFeedback').innerText = "🔐";
+    document.getElementById('output').style.color = "#4a90e2";
+    animateButton("encrypt");
+  }
+
+  // Decryption function for new messages
+  function decryptMessage() {
+    const encryptedMessage = document.getElementById('decryptInput').value;
+    let decryptedMessage = "";
+    for (let char of encryptedMessage) {
+      let index = key.indexOf(char);
+      decryptedMessage += index !== -1 ? chars[index] : char;
+    }
+    document.getElementById('output').innerText = "🔓 Decrypted: " + decryptedMessage;
+    document.getElementById('emojiFeedback').innerText = "🔓";
+    document.getElementById('output').style.color = "#ff4a90";
+    animateButton("decrypt");
+  }
+
+  // Button animation function
+  function animateButton(action) {
+    const button = action === "encrypt" ? document.querySelectorAll("button")[0] : document.querySelectorAll("button")[1];
+    button.style.transform = "scale(1.1)";
+    setTimeout(() => button.style.transform = "scale(1)", 100);
+  }
+</script>
+
+</body>
+</html>
